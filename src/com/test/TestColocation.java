@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.util.Random;
 import java.util.Set;
 
+import com.hazelcast.config.Config;
+import com.hazelcast.config.MapConfig;
+import com.hazelcast.config.MapIndexConfig;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.IMap;
@@ -24,6 +27,12 @@ public class TestColocation {
 	
 	
 	public TestColocation() {
+		Config config = new Config();
+		MapIndexConfig customerIdIndex = new MapIndexConfig("customerId",true);
+		
+		MapConfig orderConfig = new MapConfig("orders");
+		orderConfig.addMapIndexConfig(customerIdIndex);
+		config.addMapConfig(orderConfig);
 		instance = Hazelcast.newHazelcastInstance();
 		customers = instance.getMap("customer");
 		orders = instance.getMap("orders");
